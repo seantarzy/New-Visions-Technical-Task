@@ -1,8 +1,7 @@
 import './App.css';
 import React from 'react';
 import students from './students.json'
-import StudentRow from './StudentRow';
- 
+import StudentRow from './StudentRow'; 
 class App extends React.Component{
 
   state= {
@@ -81,9 +80,10 @@ class App extends React.Component{
   render(){
   return (
     <div className="App">
-      <header className="app-header">New Visions Technical Assignment</header>
+      <img src={NewVisionsLogo} className = "school-logo"/>
+      <header className="site-header"> Technical Assignment</header>
       <label for="student">Filter:</label>
-      <select name="filter By" id="filter" onChange = {(e)=>this.handleSelect(e)}>
+      <select name="filter By" className="select-dropdown" id="filter" onChange = {(e)=>this.handleSelect(e)}>
         <option value="Normal">None</option>
         <option value="By Grade">By Grade</option>
         <option value="Lowest Average Per Grade">Lowest Average Per Grade</option>
