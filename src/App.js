@@ -7,11 +7,6 @@ class App extends React.Component{
 
   state= {
     displayedStudents: null,
-    filterOptions: [
-    "normal",
-    "by grade",
-    "lowest averages per grade"
-    ],
     extraColumn: false,
     originalStudents: null
   }
@@ -20,64 +15,60 @@ class App extends React.Component{
     this.setState({displayedStudents: students})
       }
 
-      groupByGrade = ()=>{
-        let studentsByGrade = [...students].sort((a,b)=>a.grade - b.grade)
-          return studentsByGrade
+  groupByGrade = ()=>{
+    let studentsByGrade = [...students].sort((a,b)=>a.grade - b.grade)
+      return studentsByGrade
+  }
+
+  getAverageOfGrades = (student)=>{
+    let {scores} = student
+    let total = 0
+    for(let i=0;i<scores.length; i++){
+      total += scores[i]["value"]
+    }
+    return total/(scores.length)
+  }
+
+
+  getStudentAverages = (studentArray)=>{
+      let studentAvgs = studentArray.map((student) => {
+        let avgGrade = this.getAverageOfGrades(student);
+        student["avg"] = avgGrade;
+        return student;
+      });
+      return studentAvgs
+  }
+
+  getLowestAvgeragePerGrade = ()=>{
+    let studentsByGrade = this.groupByGrade()
+    let studentAvgs = this.getStudentAverages(studentsByGrade)
+    let lowestAvgPerGrade = []
+    let currentLowStudent = studentAvgs[0]
+    for(let i=1; i<studentAvgs.length; i++){
+      if (studentAvgs[i]["grade"] > currentLowStudent["grade"] || i === studentAvgs.length-1){
+        lowestAvgPerGrade.push(currentLowStudent)
+        currentLowStudent = studentAvgs[i]
       }
-
-    
-      getAverageOfGrades = (student)=>{
-        let {scores} = student
-        let total = 0
-        for(let i=0;i<scores.length; i++){
-
-          total += scores[i]["value"]
-        }
-        return total/(scores.length)
-      }
-
-
-      getStudentAverages = (studentArray)=>{
-         let studentAvgs = studentArray.map((student) => {
-           let avgGrade = this.getAverageOfGrades(student);
-           student["avg"] = avgGrade;
-           return student;
-         });
-         return studentAvgs
-      }
-
-      getLowestAvgeragePerGrade = ()=>{
-        let studentsByGrade = this.groupByGrade()
-        let studentAvgs = this.getStudentAverages(studentsByGrade)
-        let lowestAvgPerGrade = []
-        let currentLowStudent = studentAvgs[0]
-        for(let i=1; i<studentAvgs.length; i++){
-          if (studentAvgs[i]["grade"] > currentLowStudent["grade"] || i === studentAvgs.length-1){
-            lowestAvgPerGrade.push(currentLowStudent)
-            currentLowStudent = studentAvgs[i]
-          }
-            else if (studentAvgs[i]["avg"] < currentLowStudent["avg"]) {
+      else if (studentAvgs[i]["avg"] < currentLowStudent["avg"]) {
               currentLowStudent = studentAvgs[i]
             }
         }
         return lowestAvgPerGrade
       }
       handleSelect = (e)=>{
-        console.log("selected",e.target.value)
-
         if(e.target.value == "By Grade"){
           let byGrade = this.groupByGrade();
           this.setState({displayedStudents: byGrade, extraColumn: false})
         }
         if(e.target.value === "Lowest Average Per Grade"){
-          this.setState({extraColumn: true})
           let lowestAvgs = this.getLowestAvgeragePerGrade();
-          this.setState({displayedStudents: lowestAvgs})
+          this.setState({displayedStudents: lowestAvgs, extraColumn: true})
         }
         if(e.target.value==="Normal"){
           this.setState({displayedStudents: students, extraColumn: false})
         }
       }
+
   render(){
   return (
     <div className="App">
