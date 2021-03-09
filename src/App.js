@@ -56,7 +56,7 @@ class App extends React.Component{
         return lowestAvgPerGrade
       }
       handleSelect = (e)=>{
-        if(e.target.value == "By Grade"){
+        if(e.target.value === "By Grade"){
           let byGrade = this.groupByGrade();
           this.setState({displayedStudents: byGrade, extraColumn: false})
         }
@@ -74,7 +74,7 @@ class App extends React.Component{
     <div className="App">
       <img src={NewVisionsLogo} className = "school-logo"/>
       <header className="site-header"> Technical Assignment</header>
-      <label for="student">Filter:</label>
+      <label for="student">Filter: </label>
       <select name="filter By" className="select-dropdown" id="filter" onChange = {(e)=>this.handleSelect(e)}>
         <option value="Normal">None</option>
         <option value="By Grade">By Grade</option>
