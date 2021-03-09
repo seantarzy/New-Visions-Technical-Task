@@ -2,18 +2,24 @@ import logo from './logo.svg';
 import './App.css';
 import React from 'react';
 import students from './students.json'
+import StudentRow from './StudentRow';
+import {DropdownButton,Dropdown} from 'react-bootstrap'
  
 class App extends React.Component{
 
   state= {
-    students: null
+    displayedStudents: null,
+    filterOptions: [
+    "normal",
+    "by grade",
+    "lowest averages per grade"
+    ]
   
   }
 
   componentDidMount =()=>{
     console.log(students)
-    this.setState({students})
-    this.groupByGrade()
+    this.setState({displayedStudents: students})
     this.getLowestAvgeragePerGrade()
       }
 
@@ -21,6 +27,8 @@ class App extends React.Component{
         let studentsByGrade = [...students].sort((a,b)=>a.grade - b.grade)
           return studentsByGrade
       }
+
+    
       getAverageOfGrades = (student)=>{
         let {scores} = student
         let total = 0
@@ -30,6 +38,7 @@ class App extends React.Component{
         }
         return total/(scores.length)
       }
+
 
       getStudentAverages = (studentArray)=>{
          let studentAvgs = studentArray.map((student) => {
@@ -56,26 +65,54 @@ class App extends React.Component{
         }
         return lowestAvgPerGrade
       }
+      handleSelect = (e)=>{
+        console.log("selected",e.target.value)
+
+        if(e.target.value == "By Grade"){
+          let byGrade = this.groupByGrade();
+          this.setState({displayedStudents: byGrade})
+        }
+        if(e.target.value === "Lowest Average Per Grade"){
+          let lowestAvgs = this.getLowestAvgeragePerGrade();
+          this.setState({displayedStudents: lowestAvgs})
+        }
+        if(e.target.value==="normal"){
+          this.setState({displayedStudents: students})
+        }
+      }
   render(){
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <header className="app-header">New Visions Technical Assignment</header>
+      <label for="student">Filter By:</label>
+      <select name="filter By" id="filter" onChange = {(e)=>this.handleSelect(e)}>
+        <option value="Normal">Normal</option>
+        <option value="By Grade">By Grade</option>
+        <option value="Lowest Average Per Grade">Lowest Average Per Grade</option>
+      </select>
+      <table className="student-container">
+        <tr>
+          <td>Grade</td>
+          <td>Name</td>
+        </tr>
+        <tbody>
+          {this.state.displayedStudents
+            ? this.state.displayedStudents.map((student) => {
+                return (
+                  <StudentRow
+                    name={student.name}
+                    grade={student.grade}
+                    avg={student.avg || null}
+                    key={student._id.$oid}
+                  />
+                );
+              })
+            : null}
+        </tbody>
+      </table>
     </div>
   );
-  }
+}
 }
 
 export default App;
