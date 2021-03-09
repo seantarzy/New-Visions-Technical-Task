@@ -24,6 +24,24 @@
   color: white;
 }
 
+ table {
+   width: 100%;
+      border: "1px solid white" 
+    }
+  thead {
+        background-color: lightgreen
+    }
+
+    tr{
+      padding: 5px;
+    }
+      
+        tr:nth-child(even) { 
+            background-color: Lightgreen; 
+        } 
+
+
+
 .App-link {
   color: #61dafb;
 }

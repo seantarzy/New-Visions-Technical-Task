@@ -13,14 +13,13 @@ class App extends React.Component{
     "normal",
     "by grade",
     "lowest averages per grade"
-    ]
-  
+    ],
+    extraColumn: false,
+    originalStudents: null
   }
 
   componentDidMount =()=>{
-    console.log(students)
     this.setState({displayedStudents: students})
-    this.getLowestAvgeragePerGrade()
       }
 
       groupByGrade = ()=>{
@@ -70,31 +69,38 @@ class App extends React.Component{
 
         if(e.target.value == "By Grade"){
           let byGrade = this.groupByGrade();
-          this.setState({displayedStudents: byGrade})
+          this.setState({displayedStudents: byGrade, extraColumn: false})
         }
         if(e.target.value === "Lowest Average Per Grade"){
+          this.setState({extraColumn: true})
           let lowestAvgs = this.getLowestAvgeragePerGrade();
           this.setState({displayedStudents: lowestAvgs})
         }
-        if(e.target.value==="normal"){
-          this.setState({displayedStudents: students})
+        if(e.target.value==="Normal"){
+          this.setState({displayedStudents: students, extraColumn: false})
         }
       }
   render(){
   return (
     <div className="App">
       <header className="app-header">New Visions Technical Assignment</header>
-      <label for="student">Filter By:</label>
+      <label for="student">Filter:</label>
       <select name="filter By" id="filter" onChange = {(e)=>this.handleSelect(e)}>
-        <option value="Normal">Normal</option>
+        <option value="Normal">None</option>
         <option value="By Grade">By Grade</option>
         <option value="Lowest Average Per Grade">Lowest Average Per Grade</option>
       </select>
       <table className="student-container">
+        <thead className = "table-header">
         <tr>
           <td>Grade</td>
           <td>Name</td>
+          {this.state.extraColumn ? 
+        <td>Average</td>  
+          : null
+        }
         </tr>
+        </thead>
         <tbody>
           {this.state.displayedStudents
             ? this.state.displayedStudents.map((student) => {
@@ -102,8 +108,9 @@ class App extends React.Component{
                   <StudentRow
                     name={student.name}
                     grade={student.grade}
-                    avg={student.avg || null}
+                    avg={student["avg"] || null}
                     key={student._id.$oid}
+                    extraColumn = {this.state.extraColumn}
                   />
                 );
               })
