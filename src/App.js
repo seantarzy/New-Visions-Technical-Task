@@ -2,6 +2,7 @@ import './App.css';
 import React from 'react';
 import students from './students.json'
 import StudentRow from './StudentRow'; 
+import NewVisionsLogo from './new-visions-logo.png'
 class App extends React.Component{
 
   state= {
