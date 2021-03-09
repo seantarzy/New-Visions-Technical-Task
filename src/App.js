@@ -1,9 +1,7 @@
-import logo from './logo.svg';
 import './App.css';
 import React from 'react';
 import students from './students.json'
 import StudentRow from './StudentRow';
-import {DropdownButton,Dropdown} from 'react-bootstrap'
  
 class App extends React.Component{
 
